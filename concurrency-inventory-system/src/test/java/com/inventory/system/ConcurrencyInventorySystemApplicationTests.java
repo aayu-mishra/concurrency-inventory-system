@@ -1,4 +1,4 @@
-package com.inventory.system.concurrency_inventory_system;
+package com.inventory.system;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

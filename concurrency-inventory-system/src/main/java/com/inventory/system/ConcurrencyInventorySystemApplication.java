@@ -1,4 +1,4 @@
-package com.inventory.system.concurrency_inventory_system;
+package com.inventory.system;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
