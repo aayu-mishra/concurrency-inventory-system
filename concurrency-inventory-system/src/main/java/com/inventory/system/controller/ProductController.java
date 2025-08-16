@@ -21,8 +21,8 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProduct());
     }
 
-    @GetMapping("/skuId")
-    public ResponseEntity<Optional<ProductEntity>> getProductBySkuId(@RequestParam String skuId){
+    @GetMapping("/{skuId}")
+    public ResponseEntity<Optional<ProductEntity>> getProductBySkuId(@PathVariable String skuId){
         return ResponseEntity.ok(productService.getProductBySkuId(skuId));
     }
 
