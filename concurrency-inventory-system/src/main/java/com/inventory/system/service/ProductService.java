@@ -1,6 +1,7 @@
 package com.inventory.system.service;
 
 import com.inventory.system.entity.ProductEntity;
+import com.inventory.system.exception.ResourceNotFoundException;
 import com.inventory.system.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,11 @@ public class ProductService {
         return productRepository.save(productEntity);
     }
 
-    public Optional<ProductEntity> getProductBySkuId(String skuId){
-        return productRepository.findBySkuId(skuId);
+    public ProductEntity getProductBySkuId(String skuId){
+        ProductEntity product=productRepository.findBySkuId(skuId);
+        if(product==null){
+            throw new ResourceNotFoundException("Product doesn't exist with this skuId");
+        }
+        return product;
     }
 }

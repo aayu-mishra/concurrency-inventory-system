@@ -22,7 +22,7 @@ public class ProductController {
     }
 
     @GetMapping("/{skuId}")
-    public ResponseEntity<Optional<ProductEntity>> getProductBySkuId(@PathVariable String skuId){
+    public ResponseEntity<ProductEntity> getProductBySkuId(@PathVariable String skuId){
         return ResponseEntity.ok(productService.getProductBySkuId(skuId));
     }
 
