@@ -3,6 +3,7 @@ package com.inventory.system.service;
 import com.inventory.system.entity.ProductEntity;
 import com.inventory.system.exception.ResourceNotFoundException;
 import com.inventory.system.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,28 @@ public class ProductService {
         if(product==null){
             throw new ResourceNotFoundException("Product doesn't exist with this skuId");
         }
+        return product;
+    }
+
+    @Transactional
+    public String deleteProductBySkuId(String skuId){
+        ProductEntity product = productRepository.findBySkuId(skuId);
+        if(product==null){
+            throw new ResourceNotFoundException("Product doesn't exist with this skuId");
+        }
+
+        productRepository.deleteBySkuId(skuId);
+        return "Product Deleted Successfully";
+    }
+
+    public ProductEntity updateProduct(ProductEntity productEntity){
+        ProductEntity product = productRepository.findBySkuId(productEntity.getSkuId());
+        if(product==null){
+            throw new ResourceNotFoundException("Product doesn't exist with this skuId");
+        }
+        product.setName(productEntity.getName());
+        product.setDescription(productEntity.getDescription());
+        product.setLastModifiedBy(productEntity.getLastModifiedBy());
         return product;
     }
 }

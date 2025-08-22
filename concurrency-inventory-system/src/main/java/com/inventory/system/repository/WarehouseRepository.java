@@ -8,4 +8,6 @@ import java.util.Optional;
 public interface WarehouseRepository extends JpaRepository<WarehouseEntity, Long> {
 
     Optional<WarehouseEntity> findByCode(String code);
+
+    Optional<WarehouseEntity> deleteByCode(String code);
 }

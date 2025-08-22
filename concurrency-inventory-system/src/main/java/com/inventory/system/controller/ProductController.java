@@ -30,4 +30,15 @@ public class ProductController {
     public ResponseEntity<ProductEntity> addProduct(@RequestBody ProductEntity productEntity){
         return ResponseEntity.ok(productService.addProduct(productEntity));
     }
+
+    @DeleteMapping("/{skuId}")
+    public ResponseEntity<String> deleteProduct(@PathVariable String skuId){
+        return ResponseEntity.ok().body(productService.deleteProductBySkuId(skuId));
+    }
+
+    @PutMapping
+    public ResponseEntity<ProductEntity> updateProduct(@RequestBody ProductEntity productEntity){
+        return ResponseEntity.ok(productService.updateProduct(productEntity));
+    }
+
 }

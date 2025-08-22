@@ -34,6 +34,9 @@ public class InventoryItemEntity {
     @Version
     private Long version;
 
+    public InventoryItemEntity(ProductEntity product, WarehouseEntity destinationWarehouse, int i) {
+    }
+
     public int getAvailable() {
         return onHand - reserved;
     }
