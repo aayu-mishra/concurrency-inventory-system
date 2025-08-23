@@ -9,13 +9,11 @@ import com.inventory.system.model.AdjustStockRequest;
 import com.inventory.system.repository.InventoryItemRepository;
 import com.inventory.system.repository.ProductRepository;
 import com.inventory.system.repository.WarehouseRepository;
+import com.inventory.system.service.InventoryService;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -32,6 +30,8 @@ public class InventoryController {
     @Autowired
     private WarehouseRepository warehouseRepository;
 
+    @Autowired
+    private InventoryService inventoryService;
 
     @PostMapping("/add/inventory")
     public ResponseEntity<InventoryItemEntity> createInventoryItem(@RequestBody AddInventoryRequest addInventoryRequest){
@@ -51,7 +51,7 @@ public class InventoryController {
     }
 
     @PostMapping("/adjust")
-    public ResponseEntity<InventoryItemEntity> adjustStock(@RequestBody AdjustStockRequest adjustStockRequest) throws BadRequestException {
+    public ResponseEntity<InventoryItemEntity> adjustStock(@RequestBody AdjustStockRequest adjustStockRequest, @RequestHeader("X-Idempotency-Key") String reqId) throws BadRequestException {
         ProductEntity productEntity = productRepository.findBySkuId(adjustStockRequest.getSkuId());
         if(productEntity==null){
             throw new  ResourceNotFoundException("Product not found with specified skuId");
@@ -59,17 +59,15 @@ public class InventoryController {
         Optional<WarehouseEntity> warehouse= Optional.ofNullable(warehouseRepository.findByCode(adjustStockRequest.getWarehouseCode())
                 .orElseThrow(() -> new ResourceNotFoundException("wareHouse Not Found")));
 
-        Optional<InventoryItemEntity> inventoryItemEntity= Optional.ofNullable(inventoryItemRepository.findByProductAndWarehouse(productEntity, warehouse.get()).orElseThrow(() -> new ResourceNotFoundException("Product or wareHouse Not Found")));
+        InventoryItemEntity updatedItem = inventoryService.adjustStock(
+                productEntity,
+                warehouse.get(),
+                adjustStockRequest.getDelta(),
+                reqId
+        );
 
-        int newQty= inventoryItemEntity.get().getOnHand()+adjustStockRequest.getDelta();
 
-        if(newQty<0){
-            throw new BadRequestException("Not Enough Stock" + inventoryItemEntity.get().getOnHand());
-        }
-
-        inventoryItemEntity.get().setOnHand(newQty);
-        inventoryItemRepository.save(inventoryItemEntity.get());
-        return ResponseEntity.ok().body(inventoryItemEntity.get());
+        return ResponseEntity.ok().body(updatedItem);
 
     }
 

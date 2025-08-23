@@ -1,5 +1,9 @@
 spring:
-  port: 8082
+  server:
+    port: 8082
+  redis.host: localhost
+  redis.port: 6379
+  redis.timeout: 60000
   datasource:
     url: jdbc:postgresql://localhost:5432/inventory_db
     username: postgres
@@ -8,8 +12,10 @@ spring:
     hibernate:
       dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: update
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
+        
+
 

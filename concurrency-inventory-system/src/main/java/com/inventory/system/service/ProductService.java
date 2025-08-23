@@ -51,6 +51,7 @@ public class ProductService {
         product.setName(productEntity.getName());
         product.setDescription(productEntity.getDescription());
         product.setLastModifiedBy(productEntity.getLastModifiedBy());
+        productRepository.save(product);
         return product;
     }
 }
